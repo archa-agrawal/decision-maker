@@ -4,7 +4,7 @@ VALUES ('Alice', 'alice@gmail.com'),
         ('Bob', 'bob@gmail.com'),
         ('Aren', 'aren.dolbakian@gmail.com'),
         ('Archana', 'archana.agrawal3@gmail.com');
-
+        ('dave', 'dave@gmail.com');
 
 
 
