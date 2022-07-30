@@ -20,6 +20,11 @@ const createPoll = (db, poll) => {
   });
 }
 
+const getPoll = (db, pollId) => {
+}
+
+
 module.exports = {
-  createPoll
+  createPoll,
+  getPoll
 }
