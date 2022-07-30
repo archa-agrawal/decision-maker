@@ -10,8 +10,10 @@
   method: post
   url: /poll/create
   body: {
-    question : string,
-    email : string,
+    creatorName: string
+    creatorEmail : string,
+    title : string,
+    description: string,
     isNameRequired : boolean,
     choices: [
       {

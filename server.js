@@ -7,6 +7,7 @@ const sassMiddleware = require("./lib/sass-middleware");
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const {createPoll} = require("./db/helper/polls")
 
 // PG database client/connection setup
 const { Pool } = require("pg");
@@ -60,3 +61,19 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
+
+createPoll(db, {
+  creatorName: "test",
+  creatorEmail: "a@a.com",
+  title: "weekend activity",
+  description: 'outing',
+  isNameRequired: false,
+  choices: [
+    {title: 'park',
+    description: 'nice weather'},
+    {title: 'movie',
+    description: 'nice movie'},
+    {title: 'eat outside',
+    description: 'food festival'}
+  ]
+})
