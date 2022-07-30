@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+    <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/main.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
+
+    <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+    <script type="text/javascript" src="/scripts/app.js"></script>
+
+    <title>Submit Poll</title>
+
+  </head>
+
+  <body>
+
+    <main>
+      <h1>Submit your poll</h1>
+      <div>
+        <h2>Title of the Poll</h2>
+        <p>Description of the poll</p>
+      </div>
+      <div>
+        <ul>
+          <% for (let choice of choices) { %>
+            <li><%= choice.title %></li>
+            <li><%= choice.description %></li>
+          <% } %>
+        </ul>
+      </div>
+      <button>Submit Poll</button>
+      <button>Reset Poll</button>
+
+    </main>
+
+  </body>
+
+</html>

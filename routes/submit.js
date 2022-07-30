@@ -1,17 +1,17 @@
+
+'use strict'
 const express = require('express');
 const router  = express.Router();
-const {createPoll, getPoll} = require("../db/helper/polls")
+const {getPoll} = require('../db/helper/polls')
+
 
 module.exports = (db) => {
-  router.get("/:id", (req, res) => {    // View poll to vote
-    res.send('OK')
-
-
-
-    getPoll(db, req.params.id); // logs poll object to console when accessing submit/poll_id
+  router.get("/:id", (req, res) => {    // View submit page to vote
+    const data = getPoll(db, req.params.id) //function is yet to be defined in polls.js
+  
+    const templateVar = {choices: data.choices}
+    res.render('submit', templateVar)
   })
-
-
 
   router.post("/:id", (req, res) => {  // Submit to vote on poll
     res.send('OK')

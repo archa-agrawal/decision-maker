@@ -61,7 +61,6 @@ const getPoll = (db, poll_id) => {
 }
 
 
-
 module.exports = {
   createPoll,
   getPoll
