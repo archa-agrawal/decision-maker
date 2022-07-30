@@ -1,3 +1,4 @@
+
 'use strict'
 const express = require('express');
 const router  = express.Router();
@@ -11,8 +12,6 @@ module.exports = (db) => {
     const templateVar = {choices: data.choices}
     res.render('submit', templateVar)
   })
-
-
 
   router.post("/:id", (req, res) => {  // Submit to vote on poll
     res.send('OK')

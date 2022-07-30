@@ -7,7 +7,7 @@ const sassMiddleware = require("./lib/sass-middleware");
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
-const {createPoll} = require("./db/helper/polls")
+const {createPoll, getPoll} = require("./db/helper/polls")
 
 // PG database client/connection setup
 const { Pool } = require("pg");
