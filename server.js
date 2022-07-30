@@ -7,7 +7,7 @@ const sassMiddleware = require("./lib/sass-middleware");
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
-const {createPoll} = require("./db/helper/polls")
+const {createPoll, getPoll} = require("./db/helper/polls")
 
 // PG database client/connection setup
 const { Pool } = require("pg");
@@ -40,14 +40,14 @@ const usersRoutes = require("./routes/users");
 const widgetsRoutes = require("./routes/widgets");
 const createRoutes = require("./routes/create");
 const resultsRoutes = require("./routes/results");
-const pollRoutes = require("./routes/poll");
+const submitRoutes = require("./routes/submit");
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
 app.use("/api/users", usersRoutes(db));
 app.use("/api/widgets", widgetsRoutes(db));
 app.use("/create", createRoutes(db));
 app.use("/results", resultsRoutes(db));
-app.use("/poll", pollRoutes(db));
+app.use("/submit", submitRoutes(db));
 // Note: mount other resources here, using the same pattern above
 
 // Home page
@@ -62,18 +62,20 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
 
-createPoll(db, {
-  creatorName: "test",
-  creatorEmail: "a@a.com",
-  title: "weekend activity",
-  description: 'outing',
-  isNameRequired: false,
-  choices: [
-    {title: 'park',
-    description: 'nice weather'},
-    {title: 'movie',
-    description: 'nice movie'},
-    {title: 'eat outside',
-    description: 'food festival'}
-  ]
-})
+// createPoll(db, {`
+//   creatorName: "test",
+//   creatorEmail: "a@a.com",
+//   title: "weekend activity",
+//   description: 'outing',
+//   isNameRequired: false,
+//   choices: [
+//     {title: 'park',
+//     description: 'nice weather'},
+//     {title: 'movie',
+//     description: 'nice movie'},
+//     {title: 'eat outside',
+//     description: 'food festival'}
+//   ]
+// })
+
+
