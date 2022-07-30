@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Home Page</title>
+
+  <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+  <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
+  <link rel="stylesheet" href="/styles/create.css" type="text/css" />
+  <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+  <script type="text/javascript" src="/scripts/app.js"></script>
+</head>
+
+<body>
+
+  <nav>nav bar</nav>
+  <main>
+    <form name="new-poll" class="new-poll-form" action="/create" method="POST">
+
+      <input class="poll-title" type="text" name="poll-title"/><input type="text" name="poll-title-description"/>
+      <ul id="entry-list">
+        <div class="entry-container">
+          <li><input class="entry-input" type="text" name="entry"/><input type="text" name="description"/></li>
+        </div>
+      </ul>
+      <button type="submit">Submit</button>
+      <button type="button" id="add-entry">+</button>
+    </form>
+  </main>
+</body>
+</html>
+
+

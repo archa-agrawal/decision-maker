@@ -1,0 +1,15 @@
+.new-poll-form {
+
+  .poll-title {
+    margin-right:0.5rem;
+    margin-left:1rem;
+  }
+
+  .entry-container {  // container for all the entries in a new poll
+    margin-bottom: 1rem;
+
+    .entry-input { // text input for a new entry
+      margin-right: 0.5rem;
+    }
+  }
+}
