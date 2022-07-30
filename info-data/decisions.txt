@@ -1,0 +1,114 @@
+1. Get home page:
+  method: get
+  url: /
+
+2. Get create poll page:
+  method: get
+  url: /poll/create
+
+3. Post new poll:
+  method: post
+  url: /poll/create
+  body: {
+    question : string,
+    email : string,
+    isNameRequired : boolean,
+    choices: [
+      {
+        title : string,
+        description : string
+      },
+      {
+        title : string,
+        description : string
+      }
+    ]
+  }
+
+
+4. Get submit poll page:
+  method: get
+  url: /poll/submit?poll_id=<poll_id>
+  templateVar: {
+    pollId : id,
+    question : string,
+    isNameRequired: boolean,
+    choices:[
+      {
+        choiceId : id,
+        title : string,
+        description : string
+      },
+      {
+        choiceId : id,
+        title : string,
+        description : string
+      }
+    ]
+  }
+
+5. Post poll submission/submit
+  method: post
+  url: /poll/submit?poll_id=<poll_id>
+  body: {
+    pollId: id,
+    name: string,
+    choices: [
+      {
+        choiceId: id,
+        order: number
+      },
+      {
+        choiceId: id,
+        order: number
+      }
+    ]
+  }
+
+6. Get admin page for question
+  method: get
+  url: /poll/results?poll_id=<poll_id>
+  templateVar: {
+    pollId: id,
+    question: string,
+    email: string,
+    isNameRequired: boolean,
+    choices: [
+      {
+        choiceId: id,
+        title: string,
+        description: string,
+        rank: number
+      },
+      {
+        choiceId: id,
+        title: string,
+        description: string,
+        rank: number
+      }
+    ]
+  }
+
+7. Get individual page for question
+  method: get
+  url: /poll/submission?submission_id=<submission_id>
+  templateVar: {
+    pollId: id,
+    question: string,
+    submissionId: id,
+    name: string,
+    choices:[
+      {
+        choiceId: id,
+        title: string,
+        description: string,
+        order: number
+      },
+      {
+        choiceId: id,
+        title: string,
+        description: string,
+        order: number
+      }
+    ]
+  }
