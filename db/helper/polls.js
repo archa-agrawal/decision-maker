@@ -31,6 +31,7 @@ const createPoll = (db, poll) => {
  */
 const getPoll = (db, poll_id) => {
 
+
   const formatPoll = (data, obj) => { // format poll object to be returned to the client
     obj["pollId"] = data.rows[0].pollid;
     obj["question"] = data.rows[0].question;
@@ -55,7 +56,6 @@ const getPoll = (db, poll_id) => {
   WHERE poll_id = $1;`, [poll_id])
     .then((data) => {
       formatPoll(data, poll);
-      console.log(poll);
       return poll;
     });
 }
