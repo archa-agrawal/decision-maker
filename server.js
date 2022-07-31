@@ -61,3 +61,30 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
+/*
+createPoll(db, {
+  creatorName: "Archana Agrawal",
+  creatorEmail: "archana.agrawal3@gmail.com",
+  title: "Where to eat tonight?",
+  description: "It's Poppy's birthday party!!!",
+  isNameRequired: true,
+  choices:[
+    {
+      title: "The grand mehfil",
+      description: "Indian fine dining"
+    },
+    {
+      title: "Quesada",
+      description: "Mexican Fast Food"
+    },
+    {
+      title: "Wildcraft",
+      description: "PUB FOOD!!!"
+    },
+    {
+      title: "Ennio's Pasta",
+      description: "Italian fine dining"
+    }
+  ]
+})
+*/

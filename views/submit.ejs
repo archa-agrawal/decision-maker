@@ -2,39 +2,118 @@
 <html lang="en">
 
   <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="keywords">
 
-    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
-    <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Montserrat:300,400,500,700" rel="stylesheet">
+
+    <!-- CSS only -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <!-- Template Main CSS File -->
+    <link rel="stylesheet" href="/styles/submit.css" type="text/css" />
     <link rel="stylesheet" href="/styles/main.css" type="text/css" />
-    <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/solid.js" integrity="sha384-/BxOvRagtVDn9dJ+JGCtcofNXgQO/CCCVKdMfL115s3gOgQxWaX/tSq5V8dRgsbc" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/fontawesome.js" integrity="sha384-dPBGbj4Uoy1OOpM4+aRGfAOc0W37JkROT+3uynUgTHZCHZNMHfGXsmmvYTffZjYO" crossorigin="anonymous"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
     <script type="text/javascript" src="/scripts/app.js"></script>
 
-    <title>Submit Poll</title>
+    <title>Decision Maker - Submit Poll</title>
 
   </head>
 
-  <body>
+  <body style="background-image: url(/images/45-degree-fabric-light.png); background-color: #0d0040;">
+    <header id="header" class="d-flex align-items-center header-transparent">
+      <div class="container-fluid">
 
-    <main>
-      <h1>Submit your poll</h1>
-      <div>
-        <h2>Title of the Poll</h2>
-        <p>Description of the poll</p>
-      </div>
-      <div>
-        <ul>
-          <% for (let choice of choices) { %>
-            <li><%= choice.title %></li>
-            <li><%= choice.description %></li>
-          <% } %>
-        </ul>
-      </div>
-      <button>Submit Poll</button>
-      <button>Reset Poll</button>
+        <div class="row justify-content-center align-items-center">
+          <div class="col-xl-11 d-flex align-items-center justify-content-between">
+            <h1 class="logo"><a href="index.html">Decision Maker</a></h1>
+            <!-- Uncomment below if you prefer to use an image logo -->
+            <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
-    </main>
+            <nav id="navbar" class="navbar">
+              <ul>
+                <li><a class="nav-link" href="/">Home</a></li>
+                <li><a class="nav-link" href="/create">Create Poll</a></li>
+              </ul>
+              <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav><!-- .navbar -->
+          </div>
+        </div>
+
+      </div>
+    </header><!-- End Header -->
+
+    <section id="hero" style="background-image: url(/images/45-degree-fabric-light.png); background-color: #0d0040;">
+      <div class="jumbotron vertical-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-2">
+
+          </div>
+          <div class="col-8">
+            <header class='main-content-header'>
+              Submit your response
+            </header>
+
+            <div class ="main-content">
+              <main>
+                <% if (poll.nameRequired) { %>
+                  <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <label for="floatingInput">Enter your name here!</label>
+                  </div>
+                <% } %>
+
+
+                <div class="poll-title">
+                  <h3><%= poll.question %></h3>
+                  <p><%= poll.description %></p>
+                </div>
+                <ul class="list-group">
+                  <% for (let choice of poll.choices) { %>
+
+                  <li class="list-group-item d-flex justify-content-between align-items-start poll-choices">
+                    <div class="ms-2 me-auto">
+                      <div class="choice-title"><%= choice.title %></div>
+                      <div class="choice-description"><%= choice.description %></div>
+
+                    </div>
+                    <div class="drag-icon-container">
+                      <i class="fa-solid fa-bars"></i>
+                    </div>
+
+                  </li>
+                  <% } %>
+                </ul>
+                </main>
+            </div>
+            <footer class='main-content-footer'>
+              <button type="button" class="btn btn-primary">Submit Poll</button>
+              <button type="button" class="btn btn-secondary">Reset Poll</button>
+            </footer>
+          </div>
+
+        </div>
+
+      </div>
+      </div>
+    </section>
+
 
   </body>
 

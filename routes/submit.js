@@ -10,7 +10,7 @@ module.exports = (db) => {
   router.get("/:id", (req, res) => {    // View submit page to vote
     getPoll(db, req.params.id)
     .then((data) => {
-      const templateVar = {choices: data.choices}
+      const templateVar = {poll: data}
       res.render('submit', templateVar)
     });
   })
@@ -18,6 +18,9 @@ module.exports = (db) => {
   router.post("/:id", (req, res) => {  // Submit to vote on poll
     res.send('OK')
   })
+
+
+
 
 
   return router;
