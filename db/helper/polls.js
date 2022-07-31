@@ -3,6 +3,12 @@
  * create post request and adds the data to the database
  * @param {*} db - pg pool object
  * @param {*} poll - poll object to be inserted to the database
+ * @param {string} poll.creatorName
+ * @param {string} poll.creatorEmail
+ * @param {string} poll.title
+ * @param {string} poll.description
+ * @param {boolean} poll.isNameRequired
+ * @param {Array} choices
  * @returns poll_id
  */
 const createPoll = (db, poll) => {
@@ -35,6 +41,7 @@ const getPoll = (db, poll_id) => {
   const formatPoll = (data, obj) => { // format poll object to be returned to the client
     obj["pollId"] = data.rows[0].pollid;
     obj["question"] = data.rows[0].question;
+    obj["description"] = data.rows[0].poll_description;
     obj["nameRequired"] = data.rows[0].name_required;
     obj["choices"] = [];
 
@@ -50,12 +57,13 @@ const getPoll = (db, poll_id) => {
   let poll = {}; // poll object to be returned to the client
 
   return db.query(`
-  SELECT  polls.id AS pollId, polls.title AS question, polls.name_required, choices.id AS choiceId, choices.title AS title, choices.description AS description
+  SELECT  polls.id AS pollId, polls.title AS question, polls.name_required, polls.description as poll_description, choices.id AS choiceId, choices.title AS title, choices.description AS description
   FROM choices
   JOIN polls ON poll_id = polls.id
   WHERE poll_id = $1;`, [poll_id])
     .then((data) => {
       formatPoll(data, poll);
+      console.log(poll);
       return poll;
     });
 }
