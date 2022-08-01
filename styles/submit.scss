@@ -5,6 +5,9 @@
 }
 .poll-choices {
   margin-bottom: 8px;
+  &:hover {
+    cursor: grab;
+  }
 }
 .poll-title {
   color: black;
@@ -12,9 +15,19 @@
 .choice-title {
   color: black;
   font-weight: 500;
+
 }
 .choice-description {
   color: grey;
-  
+
 
 }
+.choice-entry {
+  background-color: inherit;
+  border: none;
+  cursor: inherit;
+  &:focus {
+    outline: none;
+  }
+}
+

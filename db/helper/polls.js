@@ -69,7 +69,86 @@ const getPoll = (db, poll_id) => {
 }
 
 
+
+
+const formatResults = (data, id) => { // format results to be sent saved to db
+  let obj = data;
+  let submission = {};
+  submission.pollId = parseInt(id);
+  if (obj.user_name) {
+    submission.name = obj.user_name;
+  }
+
+  delete obj['user_name'];
+  submission.choices = [];
+  let keys = Object.keys(obj);
+
+  for (let i = 0; i < keys.length; i++) {
+    let choiceObj = {};
+    let choice_id = undefined;
+      choice_id = keys[i].slice(6);
+      choiceObj['choiceId'] = parseInt(choice_id);
+      choiceObj.order = keys.indexOf(keys[i]) + 1;
+      submission.choices.push(choiceObj);
+  };
+
+  return submission;
+
+}
+
+
+
+ const nameRequiredCheck = (db, poll_id) => {
+  return db.query(`
+  SELECT name_required
+  FROM polls
+  WHERE id = $1;`, [poll_id])
+    .then((data) => {
+      return data.rows[0].name_required;
+    });
+}
+/**
+ * This function takes submission object and insert it into submisssions and results tables;
+ * and all its choices for the user to vote on
+ * @param {*} db - pg pool object
+ * @param {*} submission - object containing poll_id, username and choices
+ * @returns poll object
+ */
+  const saveSubmission = (db, submission) => {
+    let values = [submission.pollId]
+    if (submission.name) {
+      values.push(submission.name);
+    } else {
+      values.push(null);
+    }
+    return db.query(`
+    INSERT INTO submissions(poll_id, user_name)
+    values ($1, $2)
+    returning submissions.id as submission_id;
+    `, values)
+      .then((data) => {
+
+        let submissionId = data.rows[0].submission_id;
+        console.log(submissionId);
+
+        for (const choice of submission.choices) {
+          values = [submissionId, choice.choiceId, choice.order];
+          db.query(`
+          INSERT INTO results(submission_id, choice_id, choice_order)
+          VALUES($1, $2, $3)`, values);
+        }
+
+
+      });
+  }
+
+
+
+
 module.exports = {
+  saveSubmission,
   createPoll,
-  getPoll
+  getPoll,
+  formatResults,
+  nameRequiredCheck
 }
