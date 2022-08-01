@@ -24,6 +24,22 @@ $(function() {           //shorthand for $(document).ready(function() {
     );
   });
 
+  let options = Sortable.create(sort, { animation: 150 }); // makes options container sortable
+
+  let initialOrder = options.toArray(); // saves the initial order of the options
+
+  $('#reset-order').click(function() {  // resets the order of the options
+    options.sort(initialOrder);
+  });
+
+
+
+
+
+
+
+
+
 
 
 });
