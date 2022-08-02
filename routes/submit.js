@@ -12,6 +12,7 @@ module.exports = (db) => {
     .then((data) => {
       const templateVar = {poll: data}
       res.render('submit', templateVar)
+      return;
     });
   })
 
