@@ -3,7 +3,6 @@
 const express = require('express');
 const router  = express.Router();
 const {getPoll} = require('../db/helper/polls')
-const {nameRequiredCheck} = require('../db/helper/submit-helpers')
 
 
 module.exports = (db) => {
