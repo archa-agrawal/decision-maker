@@ -11,21 +11,29 @@
  * @param {Array} choices
  * @returns poll_id
  */
-const createPoll = (db, poll) => {
+ const createPoll = (db, poll) => {
+  let id;
   return db.query(`
   INSERT INTO polls(creator_name, creator_email, title, description, name_required)
   VALUES($1, $2, $3, $4, $5) RETURNING id`, [poll.creatorName, poll.creatorEmail, poll.title, poll.description, poll.isNameRequired])
     .then((data) => {
+      id = data.rows[0].id;
       const choices = poll.choices;
+      const choiceInserts = [];
       for (const choice of choices) {
-        db.query(`
-    INSERT INTO choices(title, description, poll_id)
-    VALUES($1, $2, ${data.rows[0].id})`, [choice.title, choice.description])
-      }
-      return data.rows[0].id;
-    });
+        if (choice.title) {
+          choiceInserts.push(db.query(
+            `
+              INSERT INTO choices(title, description, poll_id)
+              VALUES($1, $2, ${data.rows[0].id})
+            `, [choice.title, choice.description]
+          ))
+        }
+      };
+      return Promise.all(choiceInserts);
+    })
+    .then(() => id);
 }
-
 
 
 /**
@@ -139,11 +147,12 @@ const formatResults = (data, id) => {
 
         for (const choice of submission.choices) {
           values = [submissionId, choice.choiceId, choice.order];
-           return db.query(`
+          db.query(`
           INSERT INTO results(submission_id, choice_id, choice_order)
           VALUES($1, $2, $3)
           RETURNING submission_id`, values)       // inserts each choice into the results table
         }
+        return submissionId;
       });
   }
 
@@ -164,8 +173,8 @@ const getResults = (db, submission_id) => {
   WHERE submission_id = $1
   ORDER BY results.choice_order;`, [submission_id])
     .then((data) => {
-      console.log(data.rows);
-      return data.rows;
+
+      return Promise.all(data.rows);
     });
 }
 

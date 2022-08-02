@@ -12,6 +12,7 @@ module.exports = (db) => {
 
     getResults(db, req.params.id)
     .then((data) => {
+      console.log('results.js data : ', data)
       const templateVar = {results: data}
       res.render('results', templateVar)
     })

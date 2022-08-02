@@ -15,11 +15,15 @@ module.exports = (db) => {
     });
   })
 
+
+
+
+
   router.post("/:id", (req, res) => {  // Submit to vote on poll
 
 
   let userInput = formatResults(req.body, req.params.id);  // formats user input to be saved in the database
-  console.log(userInput);
+  console.log('userinput :', userInput);
 
   nameRequiredCheck(db, req.params.id) // checks if name is required for the poll
   .then((data) => {
@@ -28,14 +32,15 @@ module.exports = (db) => {
           res.send("Please enter your name"); // if name is required and user doesn't enter name, send error
           return;
         }
-        saveSubmission(db, userInput); // if name is required and user enters name, save the submission
-        res.redirect("/results/i/" + req.params.id);
-        return;
+        saveSubmission(db, userInput) // if name is required and user enters name, save the submission
+        .then((data) => {
+          res.redirect("/results/i/" + data); // redirect to results page
+          return;
+          });
       }
       saveSubmission(db, userInput) // if name is not required, save the submission
       .then((data) => {
-        console.log();
-      res.redirect("/results/i/" + data.rows[0].submission_id); // redirect to results page
+      res.redirect("/results/i/" + data); // redirect to results page
       return;
       });
 
