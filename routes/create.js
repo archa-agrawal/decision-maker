@@ -1,7 +1,6 @@
 const express = require('express');
 const router  = express.Router();
 const {createPoll, getPoll} = require("../db/helper/polls")
-const {API_KEY, DOMAIN} = require('../server')
 
 module.exports = (db, client) => {
   router.get("/", (req, res) => {  // View page to create a new poll
@@ -23,7 +22,7 @@ module.exports = (db, client) => {
 
         Please use this link: http://localhost:8080/results/${id} to access the current poll result of "${poll.title}"`
       };
-      client.messages.create(DOMAIN, messageData)
+      client.messages.create(process.env.DOMAIN, messageData)
       .then(() => {
         res.redirect(`/submit/${id}`)
       })

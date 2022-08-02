@@ -188,7 +188,13 @@ const getResults = (db, submission_id) => {
     return data.rows;
   });
 }
-
+const getDataFromPollId = (db, pollId) => {
+  return db.query(
+    `SELECT creator_name AS creatorName, creator_email AS creatorEmail, title
+     FROM polls
+     WHERE id = $1`, [pollId]
+  )
+}
 
 
 
@@ -198,5 +204,6 @@ module.exports = {
   createPoll,
   getPoll,
   formatResults,
-  nameRequiredCheck
+  nameRequiredCheck,
+  getDataFromPollId
 }
