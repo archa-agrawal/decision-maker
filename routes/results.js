@@ -9,7 +9,6 @@ module.exports = (db) => {
   })
 
   router.get("/i/:id", (req, res) => {  // get results for poll from specific user
-
     getResults(db, req.params.id)
     .then((data) => {
       console.log('results.js data : ', data)

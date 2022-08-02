@@ -32,11 +32,6 @@ module.exports = (db) => {
           res.send("Please enter your name"); // if name is required and user doesn't enter name, send error
           return;
         }
-        saveSubmission(db, userInput) // if name is required and user enters name, save the submission
-        .then((data) => {
-          res.redirect("/results/i/" + data); // redirect to results page
-          return;
-          });
       }
       saveSubmission(db, userInput) // if name is not required, save the submission
       .then((data) => {
@@ -46,10 +41,6 @@ module.exports = (db) => {
 
     });
   })
-
-
-
-
 
   return router;
 }

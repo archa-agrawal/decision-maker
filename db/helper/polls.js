@@ -1,3 +1,4 @@
+'use strict'
 /**
  * This function takes poll object returned from
  * create post request and adds the data to the database
@@ -129,6 +130,7 @@ const formatResults = (data, id) => {
  * @returns poll object
  */
   const saveSubmission = (db, submission) => {
+    let submissionId;
     let values = [submission.pollId]
     if (submission.name) {
       values.push(submission.name);
@@ -142,16 +144,25 @@ const formatResults = (data, id) => {
     `, values)                                  // inserts into submissions table and returns the id to be used in the results table
       .then((data) => {
 
-        let submissionId = data.rows[0].submission_id;
+        submissionId = data.rows[0].submission_id;
         // console.log(submissionId);
+        const results = []
 
         for (const choice of submission.choices) {
           values = [submissionId, choice.choiceId, choice.order];
-          db.query(`
-          INSERT INTO results(submission_id, choice_id, choice_order)
-          VALUES($1, $2, $3)
-          RETURNING submission_id`, values)       // inserts each choice into the results table
+
+          results.push(
+            db.query(`
+              INSERT INTO results(submission_id, choice_id, choice_order)
+              VALUES($1, $2, $3)
+              RETURNING submission_id
+              `, values
+            )
+          )      // inserts each choice into the results table
         }
+        return Promise.all(results)
+      })
+      .then(() => {
         return submissionId;
       });
   }
@@ -166,16 +177,16 @@ const formatResults = (data, id) => {
  */
 const getResults = (db, submission_id) => {
   return db.query(`
-  SELECT results.choice_order, choices.title, choices.description, polls.title AS poll_title, polls.description AS poll_desc
-  FROM results
-  JOIN choices ON results.choice_id = choices.id
-  JOIN polls ON choices.poll_id = polls.id
-  WHERE submission_id = $1
-  ORDER BY results.choice_order;`, [submission_id])
-    .then((data) => {
-
-      return Promise.all(data.rows);
-    });
+    SELECT results.choice_order, choices.title, choices.description, polls.title AS poll_title, polls.description AS poll_desc
+    FROM results
+    JOIN choices ON results.choice_id = choices.id
+    JOIN polls ON choices.poll_id = polls.id
+    WHERE submission_id = $1
+    ORDER BY results.choice_order;`, [submission_id]
+  )
+  .then((data) => {
+    return data.rows;
+  });
 }
 
 
