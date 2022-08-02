@@ -54,9 +54,9 @@ $(function() {           //shorthand for $(document).ready(function() {
     for (let i = 0; i < choiceTitles.length; i++) {
       poll.choices.push({'title' : choiceTitles[i], 'description' : choiceDescriptions[i]})
     }
+    $
 
     console.log(poll)
-
     fetch("/create", {
       method: 'POST',
       redirect: "follow",
