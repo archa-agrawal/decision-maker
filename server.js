@@ -15,6 +15,14 @@ const dbParams = require("./lib/db.js");
 const db = new Pool(dbParams);
 db.connect();
 
+//mailgun client/connection setup
+const formData = require('form-data');
+const Mailgun = require('mailgun.js');
+const mailgun = new Mailgun(formData);
+
+const API_KEY = process.env.API_KEY;
+
+const mailClient = mailgun.client({username: 'api', key: API_KEY});
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -47,9 +55,9 @@ const submitRoutes = require("./routes/submit");
 // Note: Feel free to replace the example routes below with your own
 app.use("/api/users", usersRoutes(db));
 app.use("/api/widgets", widgetsRoutes(db));
-app.use("/create", createRoutes(db));
+app.use("/create", createRoutes(db, mailClient));
 app.use("/results", resultsRoutes(db));
-app.use("/submit", submitRoutes(db));
+app.use("/submit", submitRoutes(db, mailClient));
 // Note: mount other resources here, using the same pattern above
 
 // Home page
@@ -63,6 +71,23 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
+
+
+
+// const messageData = {
+//   from: 'Decision Maker<admin@decision-maker.com>',
+//   to: 'archana.agrawal3@gmail.com',
+//   subject: 'Hello',
+//   text: 'Testing some Mailgun awesomeness!'
+// };
+
+//   client.messages.create(DOMAIN, messageData)
+//   .then((res) => {
+//     console.log(res);
+//   })
+//   .catch((err) => {
+//     console.error(err);
+//   });
 /*
 createPoll(db, {
   creatorName: "Archana Agrawal",
