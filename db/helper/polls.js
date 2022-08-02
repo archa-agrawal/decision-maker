@@ -182,8 +182,7 @@ const getResults = (db, submission_id) => {
     JOIN choices ON results.choice_id = choices.id
     JOIN polls ON choices.poll_id = polls.id
     WHERE submission_id = $1
-    ORDER BY results.choice_order;`, [submission_id]
-  )
+    ORDER BY results.choice_order;`, [submission_id] )
   .then((data) => {
     return data.rows;
   });
@@ -198,6 +197,125 @@ const getDataFromPollId = (db, pollId) => {
 
 
 
+const getTotalResults = (db, poll_id) => {
+
+  let resultObj = {};
+
+  //get poll title and description
+  return db.query(`
+    SELECT title, description
+    FROM polls
+    WHERE id = $1;`, [poll_id] )
+    .then((data) => {
+      let poll = {};
+      poll.title = data.rows[0].title;
+      poll.description = data.rows[0].description;
+      resultObj.poll = poll;
+      //get choices
+      return db.query(`
+        SELECT title, description, id
+        FROM choices
+        WHERE poll_id = $1;`, [poll_id] )
+        .then((data) => {
+          let numberOfChoices = Object.keys(data.rows[0]).length;
+          resultObj.poll.numOfChoices = numberOfChoices;
+          resultObj.poll.choices = data.rows;
+          // console.log(resultObj)
+
+          //get results
+          return db.query(`
+          SELECT results.choice_order, choices.id
+          FROM results
+          JOIN choices ON results.choice_id = choices.id
+          JOIN polls ON choices.poll_id = polls.id
+          WHERE polls.id = $1
+          ORDER BY results.choice_order;`, [poll_id] )
+            .then((data) => {
+             let allSubmissions = data.rows;
+
+              allSubmissions.forEach(submission => {
+                if (submission.choice_order === 1) {
+                  submission.pointValue = numberOfChoices;
+                } else {
+                  submission.pointValue = numberOfChoices - submission.choice_order + 1;
+                }
+              });
+
+              //add sum of points value for each id to the resultObj.poll.choices with matching ID
+              resultObj.poll.choices.forEach(choice => {
+                let sum = 0;
+                allSubmissions.forEach(submission => {
+                  if (submission.id === choice.id) {
+                    sum += submission.pointValue;
+                  }
+                });
+                choice.sum = sum;
+              }
+              );
+              resultObj.poll.choices.sort((a, b) => b.sum - a.sum );
+              return resultObj;
+            });
+        });
+      });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const getTotalResults = (db, poll_id) => {
+//   return db.query(`
+//   SELECT polls.id AS poll_id, polls.title AS poll_title, polls.description AS poll_desc, submissions.id AS submission_id, results.id AS result_id, choices.id AS choice_id, choice_order, choices.title AS choice_title, choices.description AS choice_desc, submissions.user_name, count(choices.*) AS total_options
+//   FROM polls
+//   JOIN submissions ON submissions.poll_id = polls.id
+//   JOIN results ON results.submission_id = submissions.id
+//   JOIN choices ON choices.id = results.choice_id
+//   WHERE polls.id = $1
+//   GROUP BY polls.id, submissions.id, results.id, choices.id, choice_order, choices.title, choices.description, submissions.user_name
+//   ORDER BY choice_order;`, [poll_id] )
+//   .then((data) => {
+//     let resultObj = {};
+//     resultObj.poll_id = data.rows[0].poll_id;
+//     resultObj.poll_title = data.rows[0].poll_title;
+//     resultObj.poll_desc = data.rows[0].poll_desc;
+//     resultObj.topScore = data.rows[0].total_options;
+//     resultObj.submissions = [];
+//     for (const submission of data.rows) {
+//       let submissionObj = {};
+//       submissionObj.submission_id = submission.submission_id;
+//       if (submission.user_name) {
+//         submissionObj.user_name = submission.user_name;
+//       }
+//       submissionObj.choices = [];
+//       for (const choice of data.rows) {
+//         let choiceObj = {};
+//         choiceObj.choice_id = choice.choice_id;
+//         choiceObj.choice_order = choice.choice_order;
+//         choiceObj.choice_title = choice.choice_title;
+//         choiceObj.choice_desc = choice.choice_desc;
+//         submissionObj.choices.push(choiceObj);
+//       }
+//       resultObj.submissions.push(submissionObj);
+//     }
+//     console.log(resultObj);
+//     return data.rows;
+//   })
+// }
+
+
+
+
+
+
 module.exports = {
   getResults,
   saveSubmission,
@@ -205,5 +323,9 @@ module.exports = {
   getPoll,
   formatResults,
   nameRequiredCheck,
-  getDataFromPollId
+  getDataFromPollId,
+  getTotalResults
 }
+
+
+
