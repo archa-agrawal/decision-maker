@@ -7,10 +7,12 @@ module.exports = (db) => {
     res.render('create');
   });
 
-
-
   router.post("/", (req, res) => { // Submit to create new poll
-    console.log(req.body);
+    const poll = req.body;
+    createPoll(db, poll)
+    .then((id) => {
+      res.redirect(`/submit/${id}`)
+    })
   });
 
 

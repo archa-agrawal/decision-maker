@@ -62,7 +62,6 @@
       <div class="container">
         <div class="row">
           <div class="col-2">
-
           </div>
           <div class="col-8">
             <form action="/create" method="post">
@@ -70,36 +69,40 @@
                 Create Poll
               </header>
 
-              <div class ="main-content">
+              <div class ="main-content" id="form-content" >
                 <main>
 
                   <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <input type="text" class="form-control" id="name" required="true" name="creatorName">
                     <label for="floatingInput">Enter your name here!</label>
                   </div>
                   <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput">Enter your email here!</label>
+                    <input type="email" class="form-control" id="email" required="true" name="creatorEmail">
+                    <label for="floatingInput" required>Enter your email here!</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="checkbox" name="isNameRequired">
+                    <label class="form-check-label" for="exampleCheck1" id="label-checkbox">Are voters required to submit their name?</label>
                   </div>
                   <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <input type="text" class="form-control" id="poll-title" required="true" name="title">
                     <label for="floatingInput">Poll title</label>
                   </div>
                   <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <input type="text" class="form-control" id="poll-description" name="description">
                     <label for="floatingInput">Poll description</label>
                   </div>
                   <div id="choices">
                     <div class="row">
                       <div class="col-6">
                         <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                          <input type="text" class="form-control" id="choice-item" required="true" name="choices[0][title]">
                           <label for="floatingInput">choice title</label>
                         </div>
                       </div>
                       <div class="col-6">
                         <div class="form-floating mb-3">
-                          <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                          <input type="text" class="form-control" id="choice-description" name="choices[0][description]">
                           <label for="floatingInput">choice description</label>
                         </div>
                       </div>
@@ -111,7 +114,7 @@
                 </main>
               </div>
               <footer class='main-content-footer'>
-                <button type="button" class="btn btn-primary">Create Poll</button>
+                <button class="btn btn-primary" id="create-button" type="submit">Create Poll</button>
                 <button type="button" class="btn btn-secondary">Restart</button>
               </footer>
             </form>

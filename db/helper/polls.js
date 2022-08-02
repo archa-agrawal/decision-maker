@@ -12,18 +12,27 @@
  * @returns poll_id
  */
 const createPoll = (db, poll) => {
+  let id;
   return db.query(`
   INSERT INTO polls(creator_name, creator_email, title, description, name_required)
   VALUES($1, $2, $3, $4, $5) RETURNING id`, [poll.creatorName, poll.creatorEmail, poll.title, poll.description, poll.isNameRequired])
     .then((data) => {
+      id = data.rows[0].id;
       const choices = poll.choices;
+      const choiceInserts = [];
       for (const choice of choices) {
-        db.query(`
-    INSERT INTO choices(title, description, poll_id)
-    VALUES($1, $2, ${data.rows[0].id})`, [choice.title, choice.description])
-      }
-      return data.rows[0].id;
-    });
+        if (choice.title) {
+          choiceInserts.push(db.query(
+            `
+              INSERT INTO choices(title, description, poll_id)
+              VALUES($1, $2, ${data.rows[0].id})
+            `, [choice.title, choice.description]
+          ))
+        }
+      };
+      return Promise.all(choiceInserts);
+    })
+    .then(() => id);
 }
 
 
@@ -39,6 +48,7 @@ const getPoll = (db, poll_id) => {
 
 
   const formatPoll = (data, obj) => { // format poll object to be returned to the client
+
     obj["pollId"] = data.rows[0].pollid;
     obj["question"] = data.rows[0].question;
     obj["description"] = data.rows[0].poll_description;
@@ -63,7 +73,6 @@ const getPoll = (db, poll_id) => {
   WHERE poll_id = $1;`, [poll_id])
     .then((data) => {
       formatPoll(data, poll);
-      console.log(poll);
       return poll;
     });
 }
