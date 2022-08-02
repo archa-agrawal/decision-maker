@@ -37,7 +37,6 @@ const createPoll = (db, poll) => {
  */
 const getPoll = (db, poll_id) => {
 
-
   const formatPoll = (data, obj) => { // format poll object to be returned to the client
     obj["pollId"] = data.rows[0].pollid;
     obj["question"] = data.rows[0].question;
@@ -69,16 +68,15 @@ const getPoll = (db, poll_id) => {
 }
 
 
+// format submission to be  saved to db
 
-
-const formatResults = (data, id) => { // format results to be sent saved to db
+const formatResults = (data, id) => {
   let obj = data;
   let submission = {};
   submission.pollId = parseInt(id);
   if (obj.user_name) {
     submission.name = obj.user_name;
   }
-
   delete obj['user_name'];
   submission.choices = [];
   let keys = Object.keys(obj);
@@ -92,13 +90,19 @@ const formatResults = (data, id) => { // format results to be sent saved to db
       submission.choices.push(choiceObj);
   };
 
-  return submission;
+  return submission;  // returns submissions as descrbed ub descrption.txt
 
 }
 
 
+/**
+ * This function takes poll_id and returns true or false depending if name is required for the poll
+ * @param {*} db - pg pool object
+ * @param {*} poll_id - poll_id to retrieve the poll from the database
+ * @returns poll object
+ */
 
- const nameRequiredCheck = (db, poll_id) => {
+ const nameRequiredCheck = (db, poll_id) => {  // check if name is required for the poll
   return db.query(`
   SELECT name_required
   FROM polls
@@ -107,9 +111,11 @@ const formatResults = (data, id) => { // format results to be sent saved to db
       return data.rows[0].name_required;
     });
 }
+
+
+
 /**
- * This function takes submission object and insert it into submisssions and results tables;
- * and all its choices for the user to vote on
+ * This function takes an object containing poll_id, name, and choices and saves it to the database
  * @param {*} db - pg pool object
  * @param {*} submission - object containing poll_id, username and choices
  * @returns poll object
@@ -125,27 +131,49 @@ const formatResults = (data, id) => { // format results to be sent saved to db
     INSERT INTO submissions(poll_id, user_name)
     values ($1, $2)
     returning submissions.id as submission_id;
-    `, values)
+    `, values)                                  // inserts into submissions table and returns the id to be used in the results table
       .then((data) => {
 
         let submissionId = data.rows[0].submission_id;
-        console.log(submissionId);
+        // console.log(submissionId);
 
         for (const choice of submission.choices) {
           values = [submissionId, choice.choiceId, choice.order];
-          db.query(`
+           return db.query(`
           INSERT INTO results(submission_id, choice_id, choice_order)
-          VALUES($1, $2, $3)`, values);
+          VALUES($1, $2, $3)
+          RETURNING submission_id`, values)       // inserts each choice into the results table
         }
-
-
       });
   }
 
 
 
+/**
+ * This function takes a submission ID and returns the related results
+ * @param {*} db - pg pool object
+ * @param {*} submission_id - object containing poll_id, username and choices
+ * @returns poll object
+ */
+const getResults = (db, submission_id) => {
+  return db.query(`
+  SELECT results.choice_order, choices.title, choices.description, polls.title AS poll_title, polls.description AS poll_desc
+  FROM results
+  JOIN choices ON results.choice_id = choices.id
+  JOIN polls ON choices.poll_id = polls.id
+  WHERE submission_id = $1
+  ORDER BY results.choice_order;`, [submission_id])
+    .then((data) => {
+      console.log(data.rows);
+      return data.rows;
+    });
+}
+
+
+
 
 module.exports = {
+  getResults,
   saveSubmission,
   createPoll,
   getPoll,
