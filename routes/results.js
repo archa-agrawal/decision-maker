@@ -16,9 +16,8 @@ module.exports = (db) => {
   router.get("/i/:id", (req, res) => {  // get results for poll from specific user :id = submission_id
     getResults(db, req.params.id)
     .then((data) => {
-      console.log('results.js data : ', data)
+      console.log(data)
       const templateVar = {results: data}
-      console.log(templateVar)
       res.render('results', templateVar)
       return;
     })
