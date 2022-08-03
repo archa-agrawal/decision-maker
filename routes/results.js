@@ -6,10 +6,9 @@ module.exports = (db) => {
   router.get("/:id", (req, res) => {  // get all results for poll id = poll_id
     getTotalResults(db, req.params.id)
     .then((data) => {
-      const templateVar = data
-      // console.log(templateVar)
-      res.render('totalResults', templateVar)
-      return;
+      const templateVar = {poll: data}
+      console.log(templateVar)
+      res.render('totalResults', templateVar);
     })
 
   })
