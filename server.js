@@ -7,7 +7,6 @@ const sassMiddleware = require("./lib/sass-middleware");
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
-const {createPoll, getPoll} = require("./db/helper/polls")
 
 // PG database client/connection setup
 const { Pool } = require("pg");
@@ -16,13 +15,13 @@ const db = new Pool(dbParams);
 db.connect();
 
 //mailgun client/connection setup
-const formData = require('form-data');
-const Mailgun = require('mailgun.js');
+const formData = require("form-data");
+const Mailgun = require("mailgun.js");
 const mailgun = new Mailgun(formData);
 
 const API_KEY = process.env.API_KEY;
 
-const mailClient = mailgun.client({username: 'api', key: API_KEY});
+const mailClient = mailgun.client({ username: "api", key: API_KEY });
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -71,8 +70,6 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
-
-
 
 // const messageData = {
 //   from: 'Decision Maker<admin@decision-maker.com>',

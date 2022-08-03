@@ -1,8 +1,10 @@
 // Client facing scripts here
 var count = 1;
-$(function() {           //shorthand for $(document).ready(function() {
+$(function () {
+  //shorthand for $(document).ready(function() {
 
-  $("#add-entry").click(function() { //Add a new entry to the form evert time button is pressed
+  $("#add-entry").click(function () {
+    //Add a new entry to the form evert time button is pressed
 
     $("#choices").append(
       `
@@ -24,7 +26,7 @@ $(function() {           //shorthand for $(document).ready(function() {
     );
     count++;
   });
-/*
+  /*
   $("#create-button").click(function() {
 
     const poll = {
@@ -83,8 +85,8 @@ $(function() {           //shorthand for $(document).ready(function() {
 
   let initialOrder = options.toArray(); // saves the initial order of the options
 
-  $('#reset-order').click(function() {  // resets the order of the options
+  $("#reset-order").click(function () {
+    // resets the order of the options
     options.sort(initialOrder);
   });
-
 });

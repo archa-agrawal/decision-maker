@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 /**
  * This function takes poll object returned from
  * create post request and adds the data to the database
@@ -12,41 +12,53 @@
  * @param {Array} choices
  * @returns poll_id
  */
- const createPoll = (db, poll) => {
+const createPoll = (db, poll) => {
   let id;
-  return db.query(`
+  return db
+    .query(
+      `
   INSERT INTO polls(creator_name, creator_email, title, description, name_required)
-  VALUES($1, $2, $3, $4, $5) RETURNING id`, [poll.creatorName, poll.creatorEmail, poll.title, poll.description, poll.isNameRequired])
+  VALUES($1, $2, $3, $4, $5) RETURNING id`,
+      [
+        poll.creatorName,
+        poll.creatorEmail,
+        poll.title,
+        poll.description,
+        poll.isNameRequired,
+      ]
+    )
     .then((data) => {
       id = data.rows[0].id;
       const choices = poll.choices;
       const choiceInserts = [];
       for (const choice of choices) {
         if (choice.title) {
-          choiceInserts.push(db.query(
-            `
+          choiceInserts.push(
+            db.query(
+              `
               INSERT INTO choices(title, description, poll_id)
               VALUES($1, $2, ${data.rows[0].id})
-            `, [choice.title, choice.description]
-          ))
+            `,
+              [choice.title, choice.description]
+            )
+          );
         }
-      };
+      }
       return Promise.all(choiceInserts);
     })
     .then(() => id);
-}
-
+};
 
 /**
  * This function takes poll_id and returns the poll object
  * and all its choices for the user to vote on
  * @param {*} db - pg pool object
- * @param {*} poll_id - poll_id to retrieve the poll from the database
+ * @param {*} pollId - poll_id to retrieve the poll from the database
  * @returns poll object
  */
-const getPoll = (db, poll_id) => {
-
-  const formatPoll = (data, obj) => { // format poll object to be returned to the client
+const getPoll = (db, pollId) => {
+  const formatPoll = (data, obj) => {
+    // format poll object to be returned to the client
 
     obj["pollId"] = data.rows[0].pollid;
     obj["question"] = data.rows[0].question;
@@ -61,21 +73,24 @@ const getPoll = (db, poll_id) => {
       choiceObj["description"] = choice.description;
       obj["choices"].push(choiceObj);
     }
-  }
+  };
 
   let poll = {}; // poll object to be returned to the client
 
-  return db.query(`
+  return db
+    .query(
+      `
   SELECT  polls.id AS pollId, polls.title AS question, polls.name_required, polls.description as poll_description, choices.id AS choiceId, choices.title AS title, choices.description AS description
   FROM choices
   JOIN polls ON poll_id = polls.id
-  WHERE poll_id = $1;`, [poll_id])
+  WHERE poll_id = $1;`,
+      [pollId]
+    )
     .then((data) => {
       formatPoll(data, poll);
       return poll;
     });
-}
-
+};
 
 // format submission to be  saved to db
 
@@ -87,42 +102,41 @@ const formatResults = (data, id) => {
     submission.name = obj.creatorName;
   }
 
-  delete obj['creatorName'];
+  delete obj["creatorName"];
   submission.choices = [];
   let keys = Object.keys(obj);
 
   for (let i = 0; i < keys.length; i++) {
     let choiceObj = {};
-    let choice_id;
-      choice_id = keys[i].slice(6);
-      choiceObj['choiceId'] = parseInt(choice_id);
-      choiceObj.order = keys.indexOf(keys[i]) + 1;
-      submission.choices.push(choiceObj);
-  };
+    choiceObj["choiceId"] = parseInt(keys[i].slice(6));
+    choiceObj.order = keys.indexOf(keys[i]) + 1;
+    submission.choices.push(choiceObj);
+  }
 
-  return submission;  // returns submissions as descrbed ub descrption.txt
-
-}
-
+  return submission; // returns submissions as descrbed ub descrption.txt
+};
 
 /**
  * This function takes poll_id and returns true or false depending if name is required for the poll
  * @param {*} db - pg pool object
- * @param {*} poll_id - poll_id to retrieve the poll from the database
+ * @param {*} pollId - poll_id to retrieve the poll from the database
  * @returns poll object
  */
 
- const nameRequiredCheck = (db, poll_id) => {  // check if name is required for the poll
-  return db.query(`
+const nameRequiredCheck = (db, pollId) => {
+  // check if name is required for the poll
+  return db
+    .query(
+      `
   SELECT name_required
   FROM polls
-  WHERE id = $1;`, [poll_id])
+  WHERE id = $1;`,
+      [pollId]
+    )
     .then((data) => {
       return data.rows[0].name_required;
     });
-}
-
-
+};
 
 /**
  * This function takes an object containing poll_id, name, and choices and saves it to the database
@@ -130,54 +144,59 @@ const formatResults = (data, id) => {
  * @param {*} submission - object containing poll_id, username and choices
  * @returns poll object
  */
-  const saveSubmission = (db, submission) => {
-    let submissionId;
-    let values = [submission.pollId]
-    if (submission.name) {
-      values.push(submission.name);
-    } else {
-      values.push(null);
-    }
-    return db.query(`
+const saveSubmission = (db, submission) => {
+  let submissionId;
+  let values = [submission.pollId];
+  if (submission.name) {
+    values.push(submission.name);
+  } else {
+    values.push(null);
+  }
+  return db
+    .query(
+      `
     INSERT INTO submissions(poll_id, user_name)
     values ($1, $2)
     returning submissions.id as submission_id;
-    `, values)                                  // inserts into submissions table and returns the id to be used in the results table
-      .then((data) => {
+    `,
+      values
+    ) // inserts into submissions table and returns the id to be used in the results table
+    .then((data) => {
+      submissionId = data.rows[0].submission_id;
+      // console.log(submissionId);
+      const results = [];
 
-        submissionId = data.rows[0].submission_id;
-        // console.log(submissionId);
-        const results = []
+      for (const choice of submission.choices) {
+        values = [submissionId, choice.choiceId, choice.order];
 
-        for (const choice of submission.choices) {
-          values = [submissionId, choice.choiceId, choice.order];
-
-          results.push(
-            db.query(`
+        results.push(
+          db.query(
+            `
               INSERT INTO results(submission_id, choice_id, choice_order)
               VALUES($1, $2, $3)
               RETURNING submission_id
-              `, values
-            )
-          )      // inserts each choice into the results table
-        }
-        return Promise.all(results)
-      })
-      .then(() => {
-        return submissionId;
-      });
-  }
-
-
+              `,
+            values
+          )
+        ); // inserts each choice into the results table
+      }
+      return Promise.all(results);
+    })
+    .then(() => {
+      return submissionId;
+    });
+};
 
 /**
  * This function takes a submission ID and returns the related results
  * @param {*} db - pg pool object
- * @param {*} submission_id - object containing poll_id, username and choices
+ * @param {*} submissionId - object containing poll_id, username and choices
  * @returns poll object
  */
-const getResults = (db, submission_id) => {
-  return db.query(`
+const getResults = (db, submissionId) => {
+  return db
+    .query(
+      `
     SELECT results.choice_order, choices.title, choices.description,
     polls.title AS poll_title, polls.description AS poll_desc, submissions.user_name
     FROM results
@@ -185,37 +204,39 @@ const getResults = (db, submission_id) => {
     JOIN polls ON choices.poll_id = polls.id
     JOIN submissions ON results.submission_id = submissions.id
     WHERE submission_id = $1
-    ORDER BY results.choice_order;`, [submission_id] )
-  .then((data) => {
-
-
-    return data.rows;
-  });
-}
+    ORDER BY results.choice_order;`,
+      [submissionId]
+    )
+    .then((data) => {
+      return data.rows;
+    });
+};
 const getDataFromPollId = (db, pollId) => {
   return db.query(
     `SELECT creator_name AS creatorName, creator_email AS creatorEmail, title
      FROM polls
-     WHERE id = $1`, [pollId]
-  )
-}
-
+     WHERE id = $1`,
+    [pollId]
+  );
+};
 
 const getTotalResults = (db, pollId) => {
-  let poll = {}
+  let poll = {};
 
-  return db.query(
-    `
+  return db
+    .query(
+      `
       SELECT title, description FROM polls
       WHERE id = $1;
-    `, [pollId]
-  )
-  .then((pollData) => {
-    poll.title = pollData.rows[0]?.title;
-    poll.description = pollData.rows[0]?.description;
+    `,
+      [pollId]
+    )
+    .then((pollData) => {
+      poll.title = pollData.rows[0]?.title;
+      poll.description = pollData.rows[0]?.description;
 
-    return db.query(
-      `
+      return db.query(
+        `
       SELECT choice_id, choices.title AS title, choices.description AS description,
       SUM(
         (select count(id) from choices where poll_id = $1) - choice_order + 1
@@ -224,14 +245,15 @@ const getTotalResults = (db, pollId) => {
       WHERE choices.poll_id = $1
       GROUP BY choice_id, choices.title, choices.description
       ORDER BY total_votes DESC;
-      `, [pollId]
-    )
-  })
-  .then((choiceData) => {
-    poll.choices = choiceData.rows;
-    return poll;
-  })
-}
+      `,
+        [pollId]
+      );
+    })
+    .then((choiceData) => {
+      poll.choices = choiceData.rows;
+      return poll;
+    });
+};
 
 module.exports = {
   getResults,
@@ -241,8 +263,5 @@ module.exports = {
   formatResults,
   nameRequiredCheck,
   getDataFromPollId,
-  getTotalResults
-}
-
-
-
+  getTotalResults,
+};
