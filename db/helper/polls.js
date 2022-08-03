@@ -83,16 +83,17 @@ const formatResults = (data, id) => {
   let obj = data;
   let submission = {};
   submission.pollId = parseInt(id);
-  if (obj.user_name) {
-    submission.name = obj.user_name;
+  if (obj.creatorName) {
+    submission.name = obj.creatorName;
   }
-  delete obj['user_name'];
+
+  delete obj['creatorName'];
   submission.choices = [];
   let keys = Object.keys(obj);
 
   for (let i = 0; i < keys.length; i++) {
     let choiceObj = {};
-    let choice_id = undefined;
+    let choice_id;
       choice_id = keys[i].slice(6);
       choiceObj['choiceId'] = parseInt(choice_id);
       choiceObj.order = keys.indexOf(keys[i]) + 1;
@@ -182,10 +183,11 @@ const getResults = (db, submission_id) => {
     FROM results
     JOIN choices ON results.choice_id = choices.id
     JOIN polls ON choices.poll_id = polls.id
-    JOIN submissions ON submissions.poll_id = polls.id
+    JOIN submissions ON results.submission_id = submissions.id
     WHERE submission_id = $1
     ORDER BY results.choice_order;`, [submission_id] )
   .then((data) => {
+
 
     return data.rows;
   });
