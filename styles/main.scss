@@ -1,4 +1,4 @@
- /**
+/**
 * Template Name: BizPage - v5.9.1
 * Template URL: https://bootstrapmade.com/bizpage-bootstrap-business-template/
 * Author: BootstrapMade.com
@@ -8,9 +8,10 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
-html, body{
-  height:100%;
-  width:100%;
+html,
+body {
+  height: 100%;
+  width: 100%;
 }
 body {
   background: #fff;
@@ -151,10 +152,9 @@ h6 {
 .navbar a:hover,
 .navbar .active,
 .navbar .active:focus,
-.navbar li:hover>a {
+.navbar li:hover > a {
   color: #18d26e;
 }
-
 
 /**
 * Mobile Navigation
@@ -218,7 +218,7 @@ h6 {
 
 .navbar-mobile a:hover,
 .navbar-mobile .active,
-.navbar-mobile li:hover>a {
+.navbar-mobile li:hover > a {
   color: #18d26e;
 }
 
@@ -253,11 +253,11 @@ h6 {
 
 .navbar-mobile .dropdown ul a:hover,
 .navbar-mobile .dropdown ul .active:hover,
-.navbar-mobile .dropdown ul li:hover>a {
+.navbar-mobile .dropdown ul li:hover > a {
   color: #18d26e;
 }
 
-.navbar-mobile .dropdown>.dropdown-active {
+.navbar-mobile .dropdown > .dropdown-active {
   display: block;
 }
 
@@ -278,25 +278,25 @@ h6 {
   align-items: center;
 }
 
-.main-content{
+.main-content {
   width: 100%;
   background-color: white;
-  background-color: rgba(255,255,255,0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   padding: 20px;
 
-  h2{
+  h2 {
     color: black;
   }
 }
 
-.main-content-header, .main-content-footer {
+.main-content-header,
+.main-content-footer {
   width: 100%;
   //background-color: lightsteelblue;
-  background-color: rgba(255,255,255,0.8);
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 4px 20px;
 }
 .main-content-footer {
   padding: 10px 20px;
   //text-align: center;
-
 }
