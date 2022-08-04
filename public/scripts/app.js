@@ -26,60 +26,6 @@ $(function () {
     );
     count++;
   });
-  /*
-  $("#create-button").click(function() {
-
-    const poll = {
-      creatorName: $(`input[id=name]`).val(),
-      creatorEmail: $(`input[id=email]`).val(),
-      isNameRequired: false,
-      title: $(`input[id=poll-title]`).val(),
-      description: $(`input[id=poll-description]`).val(),
-      choices: []
-    }
-
-    if ($("#checkbox").is(":checked")) {
-      poll.isNameRequired = true
-    }
-    $(`input[id=checkbox]`).val()
-
-    const choiceDescriptions = []
-    const choiceTitles = []
-    $("input[id=choice-description").each(function(input) {
-      let desc = $(this).val()
-      choiceDescriptions.push(desc)
-    })
-    $("input[id=choice-item").each(function(input) {
-      let item = $(this).val()
-      choiceTitles.push(item)
-    })
-    for (let i = 0; i < choiceTitles.length; i++) {
-      poll.choices.push({'title' : choiceTitles[i], 'description' : choiceDescriptions[i]})
-    }
-    $
-
-    console.log(poll)
-    fetch("/create", {
-      method: 'POST',
-      redirect: "follow",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(poll)
-    }).then((response)=>{
-      if(response.redirected){
-          window.location.href = response.url;
-      }
-  })
-    $.post("/create", {
-      method: 'POST',
-      contentType: 'application/json; charset=utf-8',
-      data: JSON.stringify(poll)
-    })
-
-  })
-
-*/
 
   let options = Sortable.create(sort, { animation: 150 }); // makes options container sortable
 

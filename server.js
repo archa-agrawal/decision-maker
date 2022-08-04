@@ -66,49 +66,10 @@ app.use("/submit", submitRoutes(db, mailClient));
 app.get("/", (req, res) => {
   res.render("index");
 });
+app.get("/error", (req, res) => {
+  res.render("error");
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
-
-// const messageData = {
-//   from: 'Decision Maker<admin@decision-maker.com>',
-//   to: 'archana.agrawal3@gmail.com',
-//   subject: 'Hello',
-//   text: 'Testing some Mailgun awesomeness!'
-// };
-
-//   client.messages.create(DOMAIN, messageData)
-//   .then((res) => {
-//     console.log(res);
-//   })
-//   .catch((err) => {
-//     console.error(err);
-//   });
-/*
-createPoll(db, {
-  creatorName: "Archana Agrawal",
-  creatorEmail: "archana.agrawal3@gmail.com",
-  title: "Where to eat tonight?",
-  description: "It's Poppy's birthday party!!!",
-  isNameRequired: true,
-  choices:[
-    {
-      title: "The grand mehfil",
-      description: "Indian fine dining"
-    },
-    {
-      title: "Quesada",
-      description: "Mexican Fast Food"
-    },
-    {
-      title: "Wildcraft",
-      description: "PUB FOOD!!!"
-    },
-    {
-      title: "Ennio's Pasta",
-      description: "Italian fine dining"
-    }
-  ]
-})
-*/

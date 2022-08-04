@@ -208,6 +208,9 @@ const getResults = (db, submissionId) => {
       [submissionId]
     )
     .then((data) => {
+      if (data.rows.length === 0) {
+        throw new Error("Result not found");
+      }
       return data.rows;
     });
 };
@@ -232,8 +235,8 @@ const getTotalResults = (db, pollId) => {
       [pollId]
     )
     .then((pollData) => {
-      poll.title = pollData.rows[0]?.title;
-      poll.description = pollData.rows[0]?.description;
+      poll.title = pollData.rows[0].title;
+      poll.description = pollData.rows[0].description;
 
       return db.query(
         `
