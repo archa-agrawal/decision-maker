@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getResults, getTotalResults } = require("../db/helper/polls");
+const { getResults, getTotalResults } = require("../db/helper/submissions");
 
 module.exports = (db) => {
   router.get("/:id", (req, res) => {
@@ -8,7 +8,6 @@ module.exports = (db) => {
     getTotalResults(db, req.params.id)
       .then((data) => {
         const templateVar = { poll: data };
-        console.log(templateVar);
         res.render("totalResults", templateVar);
       })
       .catch(() => {
@@ -20,7 +19,6 @@ module.exports = (db) => {
     // get results for poll from specific user :id = submission_id
     getResults(db, req.params.id)
       .then((data) => {
-        console.log(data);
         const templateVar = { results: data };
         res.render("results", templateVar);
         return;

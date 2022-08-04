@@ -1,12 +1,8 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const {
-  getPoll,
-  formatResults,
-  saveSubmission,
-  getDataFromPollId,
-} = require("../db/helper/polls");
+const { getPoll, getDataFromPollId } = require("../db/helper/polls");
+const { formatResults, saveSubmission } = require("../db/helper/submissions");
 
 module.exports = (db, client) => {
   router.get("/:id", (req, res) => {
@@ -37,7 +33,6 @@ module.exports = (db, client) => {
       })
       .then((data) => {
         const poll = data.rows[0];
-        console.log(poll);
         const messageData = {
           from: "Decision Maker<admin@decision-maker.com>",
           to: poll.creatoremail,
