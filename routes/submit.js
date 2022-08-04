@@ -31,6 +31,10 @@ module.exports = (db, client) => {
         id = data;
         return getDataFromPollId(db, pollid);
       })
+      .catch((err) => {
+        console.error(err);
+        res.redirect("/error");
+      })
       .then((data) => {
         const poll = data.rows[0];
         const messageData = {
@@ -49,6 +53,9 @@ module.exports = (db, client) => {
 }"`,
         };
         return client.messages.create(process.env.DOMAIN, messageData);
+      })
+      .catch((err) => {
+        console.error(err);
       })
       .then(() => {
         res.redirect("/results/i/" + id); // redirect to results page
