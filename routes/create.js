@@ -13,6 +13,10 @@ module.exports = (db, client) => {
     let id;
     const poll = req.body;
     createPoll(db, poll)
+      .catch((err) => {
+        console.error(err);
+        res.redirect("/error");
+      })
       .then((pollId) => {
         id = pollId;
         const messageData = {
@@ -27,6 +31,9 @@ module.exports = (db, client) => {
       Please use this link: http://localhost:8080/results/${id} to access the current poll result of "${poll.title}"`,
         };
         return client.messages.create(process.env.DOMAIN, messageData);
+      })
+      .catch((err) => {
+        console.error(err);
       })
       .then(() => {
         return res.redirect(`/submit/${id}`);
