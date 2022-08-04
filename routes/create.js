@@ -20,11 +20,11 @@ module.exports = (db, client) => {
           to: poll.creatorEmail,
           subject: "Decision Maker admin links",
           text: `
-        Thank you ${poll.creatorName} for using Decision Maker.
+      Thank you ${poll.creatorName} for using Decision Maker.
 
-        Please forward this link: http://localhost:8080/submit/${id} to users to collect their votes on "${poll.title}".
+      Please forward this link: http://localhost:8080/submit/${id} to users to collect their votes on "${poll.title}".
 
-        Please use this link: http://localhost:8080/results/${id} to access the current poll result of "${poll.title}"`,
+      Please use this link: http://localhost:8080/results/${id} to access the current poll result of "${poll.title}"`,
         };
         return client.messages.create(process.env.DOMAIN, messageData);
       })
