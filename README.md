@@ -1,14 +1,13 @@
-# LHL Node Skeleton
+# Decision Maker
 
-## Project Setup
+Decision maker is an app that helps a group decide the best option by ranking the given choices.
+Users can create a poll with as many choices they want. The app uses Mailgun API to mail the link of the poll to creators. They can vote on the poll they created and share the link of the polls with others to get their vote. Users(voters) can rank their choices by dragging and dropping them putting their most preferred choice on top and the least preferred at the bottom. App uses SortableJS library for drag and drop functionality. The creator of the poll can access the poll results using the result link at any time. This app uses Borda count ranking method to rank the choices of all the voters and give a result with the sorted list of choices (most voted on the top).
 
-The following steps are only for _one_ of the group members to perform.
+## Final Product
 
-1. Create your own copy of this repo using the `Use This Template` button, ideally using the name of your project. The repo should be marked Public
-2. Verify that the skeleton code now shows up in your repo on GitHub, you should be automatically redirected
-3. Clone your copy of the repo to your dev machine
-4. Add your team members as collaborators to the project so that they can push to this repo
-5. Let your team members know the repo URL so that they use the same repo (they should _not_ create a copy/fork of this repo since that will add additional workflow complexity to the project)
+!["screenshot of create poll page"](https://github.com/archa-agrawal/tweeter/blob/master/public/images/Screen%20Shot%202022-07-21%20at%208.34.40%20PM.png)
+!["screenshot of subit poll page"](https://github.com/archa-agrawal/tweeter/blob/master/public/images/Screen%20Shot%202022-07-21%20at%208.36.31%20PM.png)
+!["screenshot of result page"](https://github.com/archa-agrawal/tweeter/blob/master/public/images/Screen%20Shot%202022-07-21%20at%208.37.46%20PM.png)
 
 ## Getting Started
 
